@@ -25,7 +25,7 @@ This is a Flutter project for an Event Booking application using the MVC archite
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/yourusername/event_booking_app.git
+   https://github.com/UP-Assignment-Exam/Event-Booking-App.git
    cd event_booking_app
    ```
 
