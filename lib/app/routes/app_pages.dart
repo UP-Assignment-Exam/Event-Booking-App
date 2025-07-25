@@ -1,16 +1,18 @@
-import 'package:event_booking_app/app/views/home_view.dart';
 import 'package:get/get.dart';
-// import other views and bindings as needed
-
-import 'app_routes.dart';
+import '../views/home_view.dart';
+import '../core/transitions/page_transitions.dart';
+part 'app_routes.dart';
 
 class AppPages {
-  static final pages = [
+  static final pages = <GetPage>[
     GetPage(
-      name: AppRoutes.home,
+      name: Routes.home,
       page: () => const HomeView(),
-      // binding: HomeBinding(), // If you use bindings
+      transition: Transition.noTransition,
+      customTransition: SlideFromRightTransition(),
+      transitionDuration: const Duration(milliseconds: 400),
     ),
-    // Add more pages here
+    // Define additional pages here:
+    // GetPage(name: Routes.details, page: () => const DetailsView(), …),
   ];
 }
