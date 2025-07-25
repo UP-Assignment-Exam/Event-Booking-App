@@ -1,23 +1,29 @@
-# Event Booking App
+# 🎫 Event Booking App
 
-A Flutter project for an Event Booking application, structured with MVC architecture and leveraging GetX for state management, routing, and dependency injection.
+A **Flutter** project for an Event Booking application, structured using **MVC architecture** and leveraging **GetX** for state management, routing, and dependency injection.
+
+---
 
 ## 📁 Project Structure
 
-- `lib/app/models/` — Data models (e.g., Event, User, Booking)
-- `lib/app/views/` — UI screens and widgets
-- `lib/app/controllers/` — Business logic and state management
-- `lib/app/services/` — API calls and backend integration
-- `lib/app/bindings/` — GetX bindings for dependency injection
-- `lib/app/routes/` — Route definitions
-- `lib/config/` — App-wide configuration, themes, constants
-- `lib/core/` — Shared utilities and helpers
+* `lib/app/models/` — Data models (e.g., Event, User, Booking)
+* `lib/app/views/` — UI screens and widgets
+* `lib/app/controllers/` — Business logic and state management
+* `lib/app/services/` — API calls and backend integration
+* `lib/app/bindings/` — GetX bindings for dependency injection
+* `lib/app/routes/` — Route definitions
+* `lib/config/` — App-wide configuration, themes, constants
+* `lib/core/` — Shared utilities and helpers
+
+---
 
 ## 🔧 Requirements
 
-- Flutter SDK (version 3.6.1 or compatible)
-- Git
-- An IDE such as VS Code or Android Studio
+* Flutter SDK (version 3.6.1 or compatible)
+* Git
+* An IDE (e.g., **VS Code**, **Android Studio**, or **IntelliJ**)
+
+---
 
 ## 🚀 Getting Started
 
@@ -30,7 +36,7 @@ cd event_booking_app
 
 ### 2. Pull Latest Updates
 
-> **Tip:** After updates are pushed to the repository, run the following command to sync your local project with the latest changes:
+> **Tip:** Keep your local project updated:
 >
 > ```bash
 > git pull origin main
@@ -48,27 +54,90 @@ flutter pub get
 flutter run
 ```
 
-> Ensure you have an emulator running or a physical device connected.
+> Make sure you have an emulator running or a physical device connected.
+
+---
 
 ## ⚙️ Useful Commands
 
-- `flutter pub get` — Install dependencies
-- `flutter run` — Run the app
-- `flutter build apk` — Build APK for Android
-- `flutter build ios` — Build for iOS
+| Command             | Description                    |
+| ------------------- | ------------------------------ |
+| `flutter pub get`   | Install dependencies           |
+| `flutter run`       | Run the app on emulator/device |
+| `flutter build apk` | Build APK for Android          |
+| `flutter build ios` | Build for iOS                  |
+
+---
+
+## 📦 How to Push Changes to GitHub
+
+### 1. Check Current Status
+
+```bash
+git status
+```
+
+> See which files have been modified.
+
+### 2. Add Files to Staging
+
+```bash
+git add .
+```
+
+> Or add specific files instead of all:
+>
+> ```bash
+> git add lib/app/views/new_view.dart
+> ```
+
+### 3. Commit Your Changes
+
+```bash
+git commit -m "Add feature: user can book events"
+```
+
+> Use meaningful commit messages.
+
+### 4. Push to GitHub
+
+```bash
+git push origin main
+```
+
+> Replace `main` with your branch name if you’re working on a different branch.
+
+---
 
 ## 📝 Additional Notes
 
-- The project uses **GetX** for state management, routing, and dependency injection.
-- Assets (images and icons) are located in `assets/images/` and `assets/icons/`.
-- Follow the existing code style and structure for consistency.
-- If you encounter issues, ensure your Flutter SDK is up-to-date and dependencies are installed.
+* The app uses **GetX** for:
+
+  * State management
+  * Routing
+  * Dependency injection
+* Assets like images and icons are in `assets/images/` and `assets/icons/`.
+* Follow existing code style and structure for consistency.
+* If issues occur, check your Flutter version and installed dependencies.
+
+---
 
 ## 🤝 Contributing
 
-- Fork the repository and submit pull requests.
-- Please adhere to the existing code style and folder structure.
+* Fork the repository.
+* Create a new branch: `git checkout -b feature/your-feature-name`
+* Make your changes.
+* Commit and push: `git push origin feature/your-feature-name`
+* Submit a pull request.
+
+---
 
 ## 📬 Contact
 
-For questions or assistance, contact **Mr. Neath** at panhaneathpeng12@gmail.com.
+For questions or support, contact **Mr. Neath** at
+📧 [panhaneathpeng12@gmail.com](mailto:panhaneathpeng12@gmail.com)
+
+---
+
+If you'd like, I can also help design a logo/banner, add screenshots, or write a short “About” section for the app!
+Let me know! 🚀
