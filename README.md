@@ -139,5 +139,4 @@ For questions or support, contact **Mr. Neath** at
 
 ---
 
-If you'd like, I can also help design a logo/banner, add screenshots, or write a short “About” section for the app!
-Let me know! 🚀
+
