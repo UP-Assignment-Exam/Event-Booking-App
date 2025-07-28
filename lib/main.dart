@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 // Import your bindings and routes (adjust the paths as per your project)
 import 'app/routes/app_pages.dart';
 import 'app/bindings/initial_binding.dart';
-import 'package:event_booking_app/app/controllers/navigation_controller.dart';
+// import 'package:event_booking_app/app/controllers/navigation_controller.dart';
 
 // Optional: for initial dependency injection
 void main() {

@@ -1,6 +1,6 @@
 
 // Create this file: lib/app/controllers/navigation_controller.dart
-import 'package:event_booking_app/app/views/widgets/custom_bottom_navigation_bar.dart';
+// import 'package:event_booking_app/app/views/widgets/custom_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
