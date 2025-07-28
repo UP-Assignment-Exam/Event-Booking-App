@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 class InitialBinding extends Bindings {
   @override
   void dependencies() {
-        Get.put(NavigationController());
+    Get.put(NavigationController());
 
     // Get.put(YourController());
     // Get.lazyPut(() => YourService());
