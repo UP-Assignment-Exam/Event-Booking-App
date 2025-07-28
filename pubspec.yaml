@@ -19,6 +19,7 @@ dependencies:
   flutter_iconpicker: ^4.0.1
   cached_network_image: ^3.4.1
   phosphor_flutter: any
+  shared_preferences: ^2.2.2
 
 dev_dependencies:
   flutter_test:
