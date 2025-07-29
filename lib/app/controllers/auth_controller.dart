@@ -295,20 +295,22 @@ class AuthController extends GetxController {
   }) async {
     isLoading.value = true;
     try {
-      // Build query string
-      final uri = Uri.parse('$baseUrl/auth/verify-otp').replace(
-        queryParameters: {
+      final uri = Uri.parse('$baseUrl/auth/verify-otp');
+
+      final response = await http.post(
+        uri,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
           'email': email,
           'otp': otp,
           'purpose': purpose,
-        },
+        }),
       );
-      print(uri);
-      final response = await http.get(uri);
+
       final data = jsonDecode(response.body);
 
-      print(response);
-      print(data);
       if (response.statusCode == 200 && data["status"] == 200) {
         Get.snackbar('Success', data['message'] ?? "Account verified!",
             backgroundColor: Colors.green, colorText: Colors.white);
@@ -337,13 +339,14 @@ class AuthController extends GetxController {
   }
 
 // RESEND OTP
-  Future<void> resendOtp({required String email}) async {
+  Future<void> resendOtp(
+      {required String email, String purpose = "email_verification"}) async {
     isLoading.value = true;
     try {
       final response = await http.post(
         Uri.parse('$baseUrl/auth/resend-otp'),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({"email": email}),
+        body: jsonEncode({"email": email, "purpose": purpose}),
       );
       final data = jsonDecode(response.body);
 
@@ -357,6 +360,102 @@ class AuthController extends GetxController {
     } catch (e) {
       Get.snackbar('Error', 'Network error: $e',
           backgroundColor: Colors.red, colorText: Colors.white);
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  // Forgot Password API Call
+  Future<bool> forgotPassword({required String email}) async {
+    isLoading.value = true;
+    try {
+      final uri = Uri.parse('$baseUrl/auth/forgot-password');
+
+      final response = await http.post(
+        uri,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'email': email,
+        }),
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200 && data["status"] == 200) {
+        Get.snackbar('Success', data['message'] ?? "Password reset OTP sent!",
+            backgroundColor: Colors.green, colorText: Colors.white);
+        return true;
+      } else {
+        Get.snackbar(
+          'Error',
+          data["message"] ?? "Failed to send reset email",
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+        return false;
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Network error: $e',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return false;
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  // Reset Password API Call
+  Future<bool> resetPassword({
+    required String email,
+    required String newPassword,
+    required String confirmPassword,
+  }) async {
+    isLoading.value = true;
+    try {
+      final uri = Uri.parse('$baseUrl/auth/reset-password');
+
+      final response = await http.post(
+        uri,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'email': email,
+          'newPassword': newPassword,
+          'confirmPassword': confirmPassword,
+        }),
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200 && data["status"] == 200) {
+        Get.snackbar(
+            'Success', data['message'] ?? "Password reset successfully!",
+            backgroundColor: Colors.green, colorText: Colors.white);
+        Get.offAllNamed('/signin');
+        return true;
+      } else {
+        Get.snackbar(
+          'Reset Failed',
+          data["message"] ?? "Failed to reset password",
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+        return false;
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Network error: $e',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return false;
     } finally {
       isLoading.value = false;
     }

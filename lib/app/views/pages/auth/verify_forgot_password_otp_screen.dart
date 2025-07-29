@@ -1,27 +1,35 @@
+import 'dart:async';
+
+import 'package:event_booking_app/app/controllers/auth_controller.dart';
+import 'package:event_booking_app/app/views/pages/auth/new_password_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'dart:async';
-import '../../../controllers/auth_controller.dart'; // adjust if needed
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-class VerificationScreen extends StatefulWidget {
-  final String emailOrPhone;
-  const VerificationScreen({super.key, required this.emailOrPhone});
+// Screen 2: Verify OTP Screen
+class VerifyForgotPasswordOtpScreen extends StatefulWidget {
+  final String email;
+
+  const VerifyForgotPasswordOtpScreen({super.key, required this.email});
 
   @override
-  State<VerificationScreen> createState() => _VerificationScreenState();
+  State<VerifyForgotPasswordOtpScreen> createState() =>
+      _VerifyForgotPasswordOtpScreenState();
 }
 
-class _VerificationScreenState extends State<VerificationScreen> {
-  final _pinControllers = List.generate(6, (_) => TextEditingController());
-  final _focusNodes = List.generate(6, (_) => FocusNode());
+class _VerifyForgotPasswordOtpScreenState
+    extends State<VerifyForgotPasswordOtpScreen> {
+  final _pinControllers = List.generate(4, (_) => TextEditingController());
+  final _focusNodes = List.generate(4, (_) => FocusNode());
   int secondsLeft = 60;
   late Timer _timer;
-  late final AuthController authController;
+  late final AuthController controller;
 
   @override
   void initState() {
     super.initState();
-    authController = Get.find<AuthController>();
+    controller = Get.find<AuthController>();
     _startTimer();
   }
 
@@ -60,14 +68,18 @@ class _VerificationScreenState extends State<VerificationScreen> {
           backgroundColor: Colors.red, colorText: Colors.white);
       return;
     }
-    await authController.verifyOtp(
-      email: widget.emailOrPhone,
+    final success = await controller.verifyOtp(
+      email: widget.email,
       otp: pin,
+      purpose: 'password_reset',
     );
+    if (success) {
+      Get.to(() => NewPasswordScreen(email: widget.email));
+    }
   }
 
   void _onChanged(int idx, String value) {
-    if (value.length == 1 && idx < 5) {
+    if (value.length == 1 && idx < 3) {
       _focusNodes[idx + 1].requestFocus();
     }
     if (value.isEmpty && idx > 0) {
@@ -76,23 +88,36 @@ class _VerificationScreenState extends State<VerificationScreen> {
   }
 
   Future<void> _resendCode() async {
-    await authController.resendOtp(email: widget.emailOrPhone);
+    await controller.resendOtp(email: widget.email, purpose: "password_reset");
+    await controller.forgotPassword(email: widget.email);
     setState(_startTimer); // Restart timer
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(leading: const BackButton()),
+      appBar: AppBar(
+        leading: const BackButton(),
+        title: const Text('Verify OTP'),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
             const SizedBox(height: 40),
+            const Text(
+              "Enter Verification Code",
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
             Text(
-                "We've sent you the verification code on ${widget.emailOrPhone}",
-                style: const TextStyle(fontSize: 16),
-                textAlign: TextAlign.center),
+              "We've sent you the verification code on ${widget.email}",
+              style: const TextStyle(fontSize: 16, color: Colors.grey),
+              textAlign: TextAlign.center,
+            ),
             const SizedBox(height: 28),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -125,7 +150,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
               return SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: authController.isLoading.value ? null : _submit,
+                  onPressed: controller.isLoading.value ? null : _submit,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF667eea),
                     foregroundColor: Colors.white,
@@ -133,7 +158,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12)),
                   ),
-                  child: authController.isLoading.value
+                  child: controller.isLoading.value
                       ? const SizedBox(
                           height: 22,
                           width: 22,

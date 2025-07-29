@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import '../views/home_view.dart';
 import '../views/pages/auth/signin_screen.dart';
 import '../views/pages/auth/signup_screen.dart';
-import '../views/pages/auth/reset_password_screen.dart';
+import '../views/pages/auth/forgot_password_screen.dart';
 import '../views/pages/profile_page.dart';
 import '../core/transitions/page_transitions.dart';
 import '../bindings/auth_binding.dart';
@@ -26,7 +26,7 @@ class AppPages {
     ),
     GetPage(
       name: Routes.reset,
-      page: () => const ResetPasswordScreen(),
+      page: () => const ForgotPasswordScreen(),
       binding: AuthBinding(),
       transition: Transition.rightToLeft,
       transitionDuration: const Duration(milliseconds: 300),
