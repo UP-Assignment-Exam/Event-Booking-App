@@ -127,7 +127,7 @@ class AuthController extends GetxController {
       if (token == null) return;
 
       final response = await http.get(
-        Uri.parse('$baseUrl/auth/profile'), // Update endpoint as needed
+        Uri.parse('$baseUrl/auth/profiles/me'), // Update endpoint as needed
         headers: {
           'Content-Type': 'application/json',
           'Authorization': token,
@@ -397,6 +397,7 @@ class AuthController extends GetxController {
         return false;
       }
     } catch (e) {
+      print(e);
       Get.snackbar(
         'Error',
         'Network error: $e',
