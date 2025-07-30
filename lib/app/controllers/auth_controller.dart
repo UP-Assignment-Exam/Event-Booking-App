@@ -41,7 +41,7 @@ class AuthController extends GetxController {
       await getUserProfile();
       if (user.value != null) {
         isLoggedIn.value = true;
-        Get.offAllNamed('/home');
+        Get.offAllNamed('/login');
       }
     }
   }
@@ -124,10 +124,12 @@ class AuthController extends GetxController {
   Future<void> getUserProfile() async {
     try {
       final token = await _storageService.getToken();
-      if (token == null) return;
-
+      if (token == null) {
+        user.value = null;
+        return;
+      }
       final response = await http.get(
-        Uri.parse('$baseUrl/auth/profiles/me'), // Update endpoint as needed
+        Uri.parse('$baseUrl/profiles/me'), // Update endpoint as needed
         headers: {
           'Content-Type': 'application/json',
           'Authorization': token,
@@ -137,7 +139,7 @@ class AuthController extends GetxController {
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
         if (responseData['status'] == 200) {
-          user.value = UserModel.fromJson(responseData['data']['user']);
+          user.value = UserModel.fromJson(responseData['data']);
           await _storageService.saveUser(user.value!);
         }
       }
