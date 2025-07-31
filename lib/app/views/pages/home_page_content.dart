@@ -1,3 +1,4 @@
+import 'package:event_booking_app/app/controllers/event_controller.dart';
 import 'package:event_booking_app/app/models/event_model.dart';
 import 'package:event_booking_app/app/views/pages/events/detail_event.dart';
 import 'package:event_booking_app/app/views/widgets/categories_bar.dart';
@@ -8,42 +9,14 @@ import 'package:event_booking_app/app/views/widgets/categories_bar.dart'
 import 'package:flutter/material.dart';
 import 'package:event_booking_app/app/models/category_model.dart' as model;
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 
 class HomePageContent extends StatelessWidget {
   HomePageContent({super.key});
 
-  final List<EventModel> upcomingEvents = [
-    EventModel(
-      id: '1',
-      title: 'International Band Music Concert',
-      imageUrl:
-          'https://img.pikbest.com/templates/2022/11/29010116/fading-style-singer-concert-poster-design_331357.jpg!sw800',
-      date: '14 December, 2021',
-      displayDate: '14\nDEC',
-      time: '4:00PM - 9:00PM',
-      locationName: 'Gala Convention Center',
-      locationAddress: '36 Guild Street London, UK',
-      organizerName: 'Ashfak Sayem',
-      organizerImageUrl:
-          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStf4dKQGnbMNu0HVT2r394aF0En_OIrcBF9A&s',
-      backgroundColor: Color(0xFFFFF4F2),
-    ),
-    EventModel(
-      id: '2',
-      title: 'Jo Malone London: An Experience',
-      imageUrl:
-          'http://buffer.com/resources/content/images/2024/11/free-stock-image-sites.png',
-      date: '20 January, 2022',
-      displayDate: '20\nJAN',
-      time: '1:00PM - 5:00PM',
-      locationName: 'Radius Gallery',
-      locationAddress: '123 Art Avenue, New York',
-      organizerName: 'Jo Malone',
-      organizerImageUrl:
-          'https://t4.ftcdn.net/jpg/02/90/67/89/360_F_290678974_AObFgMRPhgffKaXDxykn1y4IXTGB8n68.jpg',
-      backgroundColor: Color(0xFFE1F5FE),
-    ),
-  ];
+  // Initialize the EventController
+  final EventController eventController = Get.put(EventController());
+  final TextEditingController searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +83,8 @@ class HomePageContent extends StatelessWidget {
                   child: CategoriesBar(
                     categories: categories,
                     onCategoryTap: (category) {
-                      // Handle category tap
+                      // Handle category tap - filter events by category
+                      eventController.filterByCategory(category.id);
                     },
                   ),
                 ),
@@ -124,76 +98,103 @@ class HomePageContent extends StatelessWidget {
           Expanded(
             child: Container(
               color: const Color(0xFFF5F5F5),
-              child: ListView(
-                padding: const EdgeInsets.all(16),
-                children: [
-                  // Upcoming Events Section Header
-                  Row(
+              child: Obx(() {
+                if (eventController.isLoading.value &&
+                    eventController.events.isEmpty) {
+                  return const Center(
+                    child: CircularProgressIndicator(
+                      color: Color(0xFF4A43EC),
+                    ),
+                  );
+                }
+
+                return RefreshIndicator(
+                  onRefresh: () => eventController.refreshEvents(),
+                  color: const Color(0xFF4A43EC),
+                  child: ListView(
+                    padding: const EdgeInsets.all(16),
                     children: [
-                      const Text(
-                        'Upcoming Events',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87,
-                        ),
-                      ),
-                      const Spacer(),
-                      TextButton(
-                        onPressed: () {},
-                        child: const Text(
-                          'See All',
-                          style: TextStyle(
-                            color: Color(0xFF6366F1),
-                            fontSize: 14,
+                      // Upcoming Events Section Header
+                      Row(
+                        children: [
+                          const Text(
+                            'Upcoming Events',
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black87,
+                            ),
                           ),
-                        ),
+                          const Spacer(),
+                          TextButton(
+                            onPressed: () {
+                              // Navigate to all events page
+                            },
+                            child: const Text(
+                              'See All',
+                              style: TextStyle(
+                                color: Color(0xFF6366F1),
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
+                      const SizedBox(height: 12),
+
+                      // Event Cards with proper spacing
+                      Container(
+                        height: 280,
+                        child: eventController.upcomingEvents.isEmpty
+                            ? _buildEmptyState()
+                            : ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                padding: const EdgeInsets.all(12),
+                                itemCount:
+                                    eventController.upcomingEvents.length,
+                                itemBuilder: (context, index) {
+                                  final event =
+                                      eventController.upcomingEvents[index];
+                                  return GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              EventDetailsPage(
+                                                  eventId: event.id),
+                                        ),
+                                      );
+                                    },
+                                    child: Padding(
+                                      padding: EdgeInsets.only(
+                                        right: index <
+                                                eventController
+                                                        .upcomingEvents.length -
+                                                    1
+                                            ? 16
+                                            : 0,
+                                      ),
+                                      child: EventCard(event: event),
+                                    ),
+                                  );
+                                },
+                              ),
+                      ),
+
+                      // Increased spacing to prevent cutoff
+                      const SizedBox(height: 10),
+
+                      // Invite Friends Section
+                      _buildInviteFriendsCard(),
+                      const SizedBox(height: 24),
+
+                      // Space for bottom navigation
+                      const SizedBox(height: 100),
                     ],
                   ),
-                  const SizedBox(height: 12),
-
-                  // Event Cards with proper spacing
-                  Container(
-                    height: 280,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      padding: const EdgeInsets.all(12),
-                      itemCount: upcomingEvents.length,
-                      itemBuilder: (context, index) {
-                        final event = upcomingEvents[index];
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    EventDetailsPage(event: event),
-                              ),
-                            );
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                              right: index < upcomingEvents.length - 1 ? 16 : 0,
-                            ),
-                            child: EventCard(event: event),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-
-                  // Increased spacing to prevent cutoff
-                  const SizedBox(height: 10),
-
-                  // Invite Friends Section
-                  _buildInviteFriendsCard(),
-                  const SizedBox(height: 24),
-
-                  // Space for bottom navigation
-                  const SizedBox(height: 100),
-                ],
-              ),
+                );
+              }),
             ),
           ),
         ],
@@ -214,11 +215,12 @@ class HomePageContent extends StatelessWidget {
               size: 24,
             ),
           ),
-          const Expanded(
+          Expanded(
             child: TextField(
-              style: TextStyle(color: Colors.white),
-              decoration: InputDecoration(
-                hintText: 'Search...',
+              controller: searchController,
+              style: const TextStyle(color: Colors.white),
+              decoration: const InputDecoration(
+                hintText: 'Search events...',
                 hintStyle: TextStyle(
                   color: Colors.white70,
                   fontSize: 16,
@@ -228,9 +230,67 @@ class HomePageContent extends StatelessWidget {
               ),
               autocorrect: false,
               enableSuggestions: false,
+              onSubmitted: (value) {
+                eventController.searchEvents(value.trim());
+              },
+              onChanged: (value) {
+                // Optional: implement real-time search with debouncing
+                if (value.isEmpty) {
+                  eventController.searchEvents('');
+                }
+              },
+            ),
+          ),
+          // Search button
+          IconButton(
+            onPressed: () {
+              eventController.searchEvents(searchController.text.trim());
+            },
+            icon: const Icon(
+              Icons.arrow_forward,
+              color: Colors.white,
+              size: 20,
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.grey[100],
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.event_busy,
+              size: 64,
+              color: Colors.grey,
+            ),
+            SizedBox(height: 16),
+            Text(
+              'No upcoming events',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey,
+              ),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Check back later for new events',
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

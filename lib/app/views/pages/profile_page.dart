@@ -6,18 +6,15 @@ import 'package:get/get.dart';
 // Updated ProfilePage with upload functionality
 class ProfilePage extends StatelessWidget {
   ProfilePage({super.key});
+  final AuthController authController = Get.find<AuthController>();
+  final ProfileController profileController = Get.put(ProfileController());
 
   @override
   Widget build(BuildContext context) {
-    final AuthController authController = Get.find<AuthController>();
-    final ProfileController profileController = Get.put(ProfileController());
-
     return Scaffold(
       body: Obx(() {
         final user = authController.user.value;
-        print(user);
-        print(user?.avatar);
-// If user is null, try to refetch user data
+        // If user is null, try to refetch user data
         if (user == null) {
           // Check if we're already loading to avoid multiple calls
           if (!authController.isLoading.value) {
@@ -138,19 +135,19 @@ class ProfilePage extends StatelessWidget {
                                               'Pragma': 'no-cache',
                                               'Expires': '0',
                                             },
-                                            errorBuilder:
-                                                (context, error, stackTrace) {
-                                              return Container(
-                                                width: 140,
-                                                height: 140,
-                                                color: Colors.grey[300],
-                                                child: const Icon(
-                                                  Icons.person,
-                                                  size: 60,
-                                                  color: Colors.grey,
-                                                ),
-                                              );
-                                            },
+                                            // errorBuilder:
+                                            //     (context, error, stackTrace) {
+                                            //   return Container(
+                                            //     width: 140,
+                                            //     height: 140,
+                                            //     color: Colors.grey[300],
+                                            //     child: const Icon(
+                                            //       Icons.person,
+                                            //       size: 60,
+                                            //       color: Colors.grey,
+                                            //     ),
+                                            //   );
+                                            // },
                                           )
                                         : Container(
                                             width: 140,

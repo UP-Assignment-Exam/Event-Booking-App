@@ -49,10 +49,11 @@ class EventCard extends StatelessWidget {
           ClipRRect(
             borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
             child: CachedImage(
-              url: event.imageUrl,
+              url: event.imageUrl ?? "",
               height: 150,
               width: 300, // Numeric width for safe caching
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(16)),
             ),
           ),
           // Date overlay
@@ -121,7 +122,7 @@ class EventCard extends StatelessWidget {
               const SizedBox(width: 4),
               Expanded(
                 child: Text(
-                  event.locationAddress,
+                  event.location ?? "",
                   style: const TextStyle(color: Colors.grey, fontSize: 12),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
