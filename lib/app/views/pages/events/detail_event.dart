@@ -60,6 +60,20 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
     return selectedTicket.price;
   }
 
+  String formatDate(String? rawDate) {
+    if (rawDate == null) return '';
+    final date = DateTime.tryParse(rawDate);
+    if (date == null) return '';
+    return '${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')}/${date.year}';
+  }
+
+  String formatTime(String? rawDate) {
+    if (rawDate == null) return '';
+    final date = DateTime.tryParse(rawDate);
+    if (date == null) return '';
+    return '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
+  }
+
   Future<void> _loadEventDetails() async {
     final event = await eventController.getEventById(widget.eventId);
     if (event != null) {
@@ -213,14 +227,14 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
                       const SizedBox(height: 28),
                       _buildInfoTile(
                         icon: Icons.calendar_today_outlined,
-                        title: event.startDate ?? "",
-                        subtitle: event.startDate ?? "",
+                        title: formatDate(event.startDate),
+                        subtitle: formatTime(event.startDate),
                       ),
                       const SizedBox(height: 16),
                       _buildInfoTile(
                         icon: Icons.location_on_outlined,
                         title: event.location ?? "",
-                        subtitle: event.location ?? "",
+                        subtitle: "",
                       ),
                       const SizedBox(height: 16),
                       _buildInfoTile(
