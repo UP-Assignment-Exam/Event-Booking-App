@@ -221,7 +221,7 @@ class _EventsPageState extends State<EventsPage>
                 Text(
                   event.title,
                   style: const TextStyle(
-                    color: Colors.white,
+                    color: Colors.black,
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
@@ -232,13 +232,13 @@ class _EventsPageState extends State<EventsPage>
                 Row(
                   children: [
                     const Icon(Icons.location_on,
-                        size: 16, color: Colors.white70),
+                        size: 16, color: Colors.black),
                     const SizedBox(width: 4),
                     Expanded(
                       child: Text(
                         event.location ?? "",
                         style: const TextStyle(
-                          color: Colors.white70,
+                          color: Colors.black,
                           fontSize: 12,
                         ),
                         maxLines: 2,
