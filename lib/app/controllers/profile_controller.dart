@@ -22,8 +22,7 @@ class ProfileController extends GetxController {
   final StorageService _storageService = Get.find<StorageService>();
   final authController = Get.find<AuthController>();
 
-  final String baseUrl = 'http://localhost:8080/app';
-  // final String baseUrl = 'https://event-booking-backend-k2i1.onrender.com/app';
+  final String baseUrl = 'https://event-booking-backend-k2i1.onrender.com/app';
 
   // Observable for change password loading state
   final RxBool isChangingPassword = false.obs;

@@ -1,3 +1,4 @@
+import 'package:event_booking_app/app/models/payment_method_model.dart';
 import 'package:event_booking_app/app/views/pages/payments/payment_method.dart';
 import 'package:flutter/material.dart';
 import 'payment_method.dart'; // make sure this import path is correct relative to your project
@@ -10,7 +11,7 @@ class CheckoutPage extends StatefulWidget {
 }
 
 class _CheckoutPageState extends State<CheckoutPage> {
-  PaymentMethod? selectedMethod; // for selected payment method
+  PaymentMethodModel? selectedMethod; // for selected payment method
 
   @override
   Widget build(BuildContext context) {
@@ -125,8 +126,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     width: 34,
                     height: 34,
                     decoration: BoxDecoration(
-                      color: selectedMethod?.iconBackgroundColor ??
-                          Colors.white.withOpacity(0.2),
+                      color: Colors.white.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: selectedMethod != null
@@ -149,11 +149,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   onTap: () async {
                     try {
                       // Navigate and await for payment selection result
-                      final method = await Navigator.push<PaymentMethod>(
+                      final method = await Navigator.push<PaymentMethodModel>(
                         context,
                         MaterialPageRoute(
-                          builder: (_) =>
-                              PaymentMethodPage(selected: selectedMethod),
+                          builder: (_) => PaymentMethodPage(),
                         ),
                       );
                       if (method != null) {
@@ -252,86 +251,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
     );
   }
 
-  Widget _buildSelectedMethodIcon(PaymentMethod method) {
-    // Create custom icons for the selected payment method
-    Widget iconWidget;
-
-    switch (method.name) {
-      case "ABA PAY":
-        iconWidget = const Text(
-          'ABA',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 8,
-            fontWeight: FontWeight.bold,
-          ),
-          textAlign: TextAlign.center,
-        );
-        break;
-      case "Credit / Debit Card":
-        iconWidget = const Icon(
-          Icons.credit_card,
-          color: Colors.white,
-          size: 18,
-        );
-        break;
-      case "Wing Bank & KHQR":
-        iconWidget = const Text(
-          'Wing',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 8,
-            fontWeight: FontWeight.bold,
-          ),
-          textAlign: TextAlign.center,
-        );
-        break;
-      case "TrueMoney Wallet":
-        iconWidget = const Text(
-          'W',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
-          textAlign: TextAlign.center,
-        );
-        break;
-      case "ACLEDA Mobile":
-        iconWidget = const Icon(
-          Icons.trending_up,
-          color: Colors.white,
-          size: 18,
-        );
-        break;
-      case "Phillip Bank":
-        iconWidget = const Text(
-          'P',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            fontFamily: 'monospace',
-          ),
-          textAlign: TextAlign.center,
-        );
-        break;
-      default:
-        iconWidget = Icon(
-          method.icon,
-          color: Colors.white,
-          size: 18,
-        );
-    }
-
-    return Image.asset(
-      method.pngAsset,
+  Widget _buildSelectedMethodIcon(PaymentMethodModel method) {
+    return Image.network(
+      method.imageUrl,
       width: 24,
       height: 24,
       fit: BoxFit.contain,
-      errorBuilder: (context, error, stackTrace) {
-        return iconWidget;
-      },
     );
   }
 }
