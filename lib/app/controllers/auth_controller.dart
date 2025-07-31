@@ -11,7 +11,7 @@ class AuthController extends GetxController {
   // Observable variables
   final isLoading = false.obs;
   final isLoggedIn = false.obs;
-  final user = Rxn<UserModel>();
+  final Rx<UserModel?> user = Rx<UserModel?>(null);
   final rememberMe = false.obs;
 
   // Text editing controllers
@@ -114,7 +114,6 @@ class AuthController extends GetxController {
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
-      print('Sign in error: $e');
     } finally {
       isLoading.value = false;
     }
@@ -139,7 +138,12 @@ class AuthController extends GetxController {
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
         if (responseData['status'] == 200) {
-          user.value = UserModel.fromJson(responseData['data']);
+          final newUser = UserModel.fromJson(responseData['data']);
+
+          // Update user value
+          user.value = newUser;
+
+          user.refresh(); // Force GetX to notify listeners
           await _storageService.saveUser(user.value!);
         }
       }

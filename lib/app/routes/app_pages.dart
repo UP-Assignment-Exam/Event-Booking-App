@@ -40,7 +40,7 @@ class AppPages {
     ),
     GetPage(
       name: Routes.profile,
-      page: () => const ProfilePage(),
+      page: () => ProfilePage(),
       transition: Transition.rightToLeft,
       transitionDuration: const Duration(milliseconds: 300),
     ),

@@ -5,26 +5,7 @@ import 'package:get/get.dart';
 
 // Updated ProfilePage with upload functionality
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
-
-  // Method to refetch user data
-  Future<void> _refetchUserData(AuthController authController) async {
-    try {
-      await authController.getUserProfile();
-
-      // If still null after refetch, there might be an auth issue
-      if (authController.user.value == null) {
-        await authController.checkAuthStatus();
-      }
-    } catch (e) {
-      Get.snackbar(
-        'Error',
-        'Failed to load profile data',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
-    }
-  }
+  ProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -140,16 +121,38 @@ class ProfilePage extends StatelessWidget {
                           ),
                           child: Stack(
                             children: [
-                              ClipOval(
-                                child: user.avatar != null && user.avatar != ""
-                                    ? Image.network(
-                                        user.avatar ?? "",
-                                        fit: BoxFit.cover,
-                                        width: 140,
-                                        height: 140,
-                                        errorBuilder:
-                                            (context, error, stackTrace) {
-                                          return Container(
+                              Obx(() => ClipOval(
+                                    child: authController.user.value?.avatar !=
+                                                null &&
+                                            authController.user.value?.avatar !=
+                                                ""
+                                        ? Image.network(
+                                            Uri.encodeFull(
+                                                "${authController.user.value?.avatar}?v=${DateTime.now().millisecondsSinceEpoch}"),
+                                            fit: BoxFit.cover,
+                                            width: 140,
+                                            height: 140,
+                                            headers: {
+                                              'Cache-Control':
+                                                  'no-cache, no-store, must-revalidate',
+                                              'Pragma': 'no-cache',
+                                              'Expires': '0',
+                                            },
+                                            errorBuilder:
+                                                (context, error, stackTrace) {
+                                              return Container(
+                                                width: 140,
+                                                height: 140,
+                                                color: Colors.grey[300],
+                                                child: const Icon(
+                                                  Icons.person,
+                                                  size: 60,
+                                                  color: Colors.grey,
+                                                ),
+                                              );
+                                            },
+                                          )
+                                        : Container(
                                             width: 140,
                                             height: 140,
                                             color: Colors.grey[300],
@@ -158,20 +161,8 @@ class ProfilePage extends StatelessWidget {
                                               size: 60,
                                               color: Colors.grey,
                                             ),
-                                          );
-                                        },
-                                      )
-                                    : Container(
-                                        width: 140,
-                                        height: 140,
-                                        color: Colors.grey[300],
-                                        child: const Icon(
-                                          Icons.person,
-                                          size: 60,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                              ),
+                                          ),
+                                  )),
                               // Upload overlay when uploading
                               Obx(() => profileController.isUploading.value ||
                                       profileController.isUpdating.value
@@ -319,7 +310,7 @@ class ProfilePage extends StatelessWidget {
                           icon: Icons.edit,
                           title: 'Edit Profile',
                           onTap: () {
-                            // TODO: Implement edit
+                            profileController.showEditProfileDialog(context);
                           },
                         ),
                         const SizedBox(height: 12),
@@ -327,7 +318,7 @@ class ProfilePage extends StatelessWidget {
                           icon: Icons.security,
                           title: 'Change Password',
                           onTap: () {
-                            // TODO: Implement change password
+                            profileController.showChangePasswordDialog(context);
                           },
                         ),
                         const SizedBox(height: 12),
@@ -483,5 +474,24 @@ class ProfilePage extends StatelessWidget {
       'Dec'
     ];
     return '${months[date.month - 1]} ${date.day}, ${date.year}';
+  }
+}
+
+// Method to refetch user data
+Future<void> _refetchUserData(AuthController authController) async {
+  try {
+    await authController.getUserProfile();
+
+    // If still null after refetch, there might be an auth issue
+    if (authController.user.value == null) {
+      await authController.checkAuthStatus();
+    }
+  } catch (e) {
+    Get.snackbar(
+      'Error',
+      'Failed to load profile data',
+      backgroundColor: Colors.red,
+      colorText: Colors.white,
+    );
   }
 }

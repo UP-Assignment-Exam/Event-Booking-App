@@ -29,7 +29,7 @@ class _HomeViewState extends State<HomeView> {
       HomePageContent(),
       const EventsPage(),
       const TicketPassPage(),
-      const ProfilePage(),
+      ProfilePage(),
     ];
   }
 

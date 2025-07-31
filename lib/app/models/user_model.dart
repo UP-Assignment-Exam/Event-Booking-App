@@ -7,6 +7,7 @@ class UserModel {
   final bool isActive;
   final bool emailVerified;
   final String? avatar;
+  final String? phone;
   final DateTime createdAt;
   final DateTime updatedAt;
   final bool isDeleted;
@@ -20,6 +21,7 @@ class UserModel {
     required this.isActive,
     required this.emailVerified,
     this.avatar,
+    this.phone,
     required this.createdAt,
     required this.updatedAt,
     required this.isDeleted,
@@ -35,7 +37,7 @@ class UserModel {
       email: json['email'] ?? '',
       isActive: json['isActive'] ?? false,
       emailVerified: json['emailVerified'] ?? false,
-      avatar: json['avatar'],
+      avatar: json['avatar'] as String?, // Make sure this matches the JSON key
       createdAt:
           DateTime.parse(json['createdAt'] ?? DateTime.now().toIso8601String()),
       updatedAt:
@@ -54,6 +56,7 @@ class UserModel {
       'email': email,
       'isActive': isActive,
       'emailVerified': emailVerified,
+      'phone': phone,
       'avatar': avatar,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
@@ -80,6 +83,7 @@ class UserModel {
     bool? isActive,
     bool? emailVerified,
     String? avatar,
+    String? phone,
     DateTime? createdAt,
     DateTime? updatedAt,
     bool? isDeleted,
@@ -93,6 +97,7 @@ class UserModel {
       isActive: isActive ?? this.isActive,
       emailVerified: emailVerified ?? this.emailVerified,
       avatar: avatar ?? this.avatar,
+      phone: phone ?? this.phone,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       isDeleted: isDeleted ?? this.isDeleted,
